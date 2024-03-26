@@ -24,7 +24,6 @@ import lombok.Setter;
 @Entity
 @Table(name = "tb_user")
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
@@ -51,4 +50,11 @@ public class User implements Serializable{
 
     @OneToMany(mappedBy = "user")
     private List<Task> tasks = new ArrayList<>();
+
+    public User(Long id, String username, String password) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+    }
+
 }
