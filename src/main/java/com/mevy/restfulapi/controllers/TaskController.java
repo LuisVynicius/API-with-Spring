@@ -1,6 +1,7 @@
 package com.mevy.restfulapi.controllers;
 
 import java.net.URI;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,46 +16,50 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.mevy.restfulapi.models.User;
-import com.mevy.restfulapi.models.User.CreateUser;
-import com.mevy.restfulapi.models.User.UpdateUser;
-import com.mevy.restfulapi.services.UserService;
+import com.mevy.restfulapi.models.Task;
+import com.mevy.restfulapi.services.TaskService;
 
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping(value = "/task")
 @Validated
-public class UserController{
-
+public class TaskController {
+    
     @Autowired
-    private UserService userService;
+    private TaskService taskService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> findById(@PathVariable Long id){
-        User obj = userService.findById(id);
+    public ResponseEntity<Task> findById(@PathVariable Long id){
+        Task obj = taskService.findById(id);
         return ResponseEntity.ok().body(obj);
     }
 
     @PostMapping
-    @Validated(CreateUser.class)
-    public ResponseEntity<Void> create(@RequestBody @Valid User obj){
-        obj = userService.create(obj);
+    @Validated
+    public ResponseEntity<Void> create(@RequestBody @Valid Task obj){
+        obj = taskService.create(obj);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
         return ResponseEntity.created(uri).build();
     }
 
     @PutMapping("/{id}")
-    @Validated(UpdateUser.class)
-    public ResponseEntity<Void> update(@RequestBody @Valid User obj, @PathVariable Long id){
+    @Validated
+    public ResponseEntity<Void> update(@RequestBody @Valid Task obj, @PathVariable Long id){
         obj.setId(id);
-        obj = userService.update(obj);
+        taskService.update(obj);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id){
-        userService.delete(id);
+        taskService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Task>> findAllByUserId(@PathVariable Long userId){
+        List<Task> objs = taskService.findAllVByUserId(userId);
+        return ResponseEntity.ok().body(objs);
     }
 }

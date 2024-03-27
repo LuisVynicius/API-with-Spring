@@ -1,5 +1,7 @@
 package com.mevy.restfulapi.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +21,11 @@ public class TaskService {
 
     public Task findById(Long id){
         return taskRepository.findById(id).orElseThrow(() -> new RuntimeException("Task not found. id: " + id));
+    }
+
+    public List<Task> findAllVByUserId(Long userId){
+        List<Task> tasks = taskRepository.findByUser_Id(userId);
+        return tasks;
     }
 
     @Transactional
