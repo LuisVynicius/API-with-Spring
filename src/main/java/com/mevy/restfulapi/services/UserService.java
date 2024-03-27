@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mevy.restfulapi.models.User;
-import com.mevy.restfulapi.repositories.TaskRepository;
 import com.mevy.restfulapi.repositories.UserRepository;
 
 @Service
@@ -13,9 +12,6 @@ public class UserService {
     
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private TaskRepository taskRepository;
 
     public User findById(Long id){
         return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found. id: " + id));
@@ -25,7 +21,6 @@ public class UserService {
     public User create(User obj){
         obj.setId(null);
         obj = userRepository.save(obj);
-        taskRepository.saveAll(obj.getTasks());
         return obj;
     }
 
