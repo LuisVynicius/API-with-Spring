@@ -47,6 +47,7 @@ public class User implements Serializable{
     @Size(groups = {CreateUser.class, UpdateUser.class}, min = 8, max = 60)
     private String password;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Task> tasks = new ArrayList<>();
 
