@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -41,13 +43,13 @@ public class User implements Serializable{
     @Size(groups = CreateUser.class, min = 2, max = 100)
     private String username;
 
-    @JsonIgnore
+    
     @Column(length = 60, nullable = false)
     @NotEmpty(groups = {CreateUser.class, UpdateUser.class})
     @Size(groups = {CreateUser.class, UpdateUser.class}, min = 8, max = 60)
     private String password;
 
-    @JsonIgnore
+    @JsonProperty(access = Access.WRITE_ONLY)
     @OneToMany(mappedBy = "user")
     private List<Task> tasks = new ArrayList<>();
 

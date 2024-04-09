@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.mevy.restfulapi.models.User;
 import com.mevy.restfulapi.repositories.UserRepository;
+import com.mevy.restfulapi.services.exceptions.DataBindingViolationException;
+import com.mevy.restfulapi.services.exceptions.ObjectNotFoundException;
 
 @Service
 public class UserService {
@@ -14,7 +16,8 @@ public class UserService {
     private UserRepository userRepository;
 
     public User findById(Long id){
-        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found. id: " + id));
+        return userRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(
+            "User not found! id: " + id + ", type: " + User.class.getName()));
     }
 
     @Transactional
@@ -35,7 +38,7 @@ public class UserService {
         try {
             userRepository.deleteById(id);
         } catch(Exception e){
-            throw new RuntimeException("Database integrity error. ");
+            throw new DataBindingViolationException("Database integrity error. ");
         }
     }
 

@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.mevy.restfulapi.models.Task;
 import com.mevy.restfulapi.models.User;
 import com.mevy.restfulapi.repositories.TaskRepository;
+import com.mevy.restfulapi.services.exceptions.DataBindingViolationException;
+import com.mevy.restfulapi.services.exceptions.ObjectNotFoundException;
 
 @Service
 public class TaskService {
@@ -20,10 +22,11 @@ public class TaskService {
     private UserService userService;
 
     public Task findById(Long id){
-        return taskRepository.findById(id).orElseThrow(() -> new RuntimeException("Task not found. id: " + id));
+        return taskRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(
+        "Task not found! id: " + id + ", type: " + Task.class.getName()));
     }
 
-    public List<Task> findAllVByUserId(Long userId){
+    public List<Task> findAllByUserId(Long userId){
         List<Task> tasks = taskRepository.findByUser_Id(userId);
         return tasks;
     }
@@ -50,7 +53,7 @@ public class TaskService {
         try{
             taskRepository.deleteById(id);
         } catch (Exception e){
-            throw new RuntimeException("Database integrity error. ");
+            throw new DataBindingViolationException("Database integrity error. ");
         }
     }
 
