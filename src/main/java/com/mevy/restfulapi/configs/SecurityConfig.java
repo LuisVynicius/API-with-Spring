@@ -23,19 +23,19 @@ public class SecurityConfig {
     };
     private static final String[] PUBLIC_MATCHERS_POST = {
         "/user",
-        "/login"
+        "/login",
     };
 
     @Bean
     public SecurityFilterChain filterchain(HttpSecurity http) throws Exception{
 
-        http.sessionManagement(sessionManagement->sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        
-        return http.authorizeHttpRequests(authorizeRequests->{
-            authorizeRequests.requestMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll();
-            authorizeRequests.anyRequest().authenticated();
-        }).build();
-
+        return http
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
+                        .anyRequest().authenticated()    
+                ).build();
         
     }
 

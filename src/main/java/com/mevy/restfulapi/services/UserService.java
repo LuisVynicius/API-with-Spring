@@ -1,10 +1,15 @@
 package com.mevy.restfulapi.services;
 
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mevy.restfulapi.models.User;
+import com.mevy.restfulapi.models.enums.ProfileEnum;
 import com.mevy.restfulapi.repositories.UserRepository;
 import com.mevy.restfulapi.services.exceptions.DataBindingViolationException;
 import com.mevy.restfulapi.services.exceptions.ObjectNotFoundException;
@@ -15,6 +20,9 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     public User findById(Long id){
         return userRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(
             "User not found! id: " + id + ", type: " + User.class.getName()));
@@ -23,6 +31,8 @@ public class UserService {
     @Transactional
     public User create(User obj){
         obj.setId(null);
+        obj.setPassword(bCryptPasswordEncoder.encode(obj.getPassword()));
+        obj.setProfiles(Stream.of(ProfileEnum.USER.getCode()).collect(Collectors.toSet()));
         obj = userRepository.save(obj);
         return obj;
     }
@@ -31,6 +41,7 @@ public class UserService {
     public User update(User obj){
         User newObj = findById(obj.getId());
         newObj.setPassword(obj.getPassword());
+        newObj.setPassword(bCryptPasswordEncoder.encode(obj.getPassword()));
         return userRepository.save(newObj);
     }
 
