@@ -24,8 +24,8 @@ public class JWTUtil {
     public String generateToken(String username){
         SecretKey key = getKeyBySecret();
         return Jwts.builder()
-                .setSubject(username)
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .subject(username)
+                .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(key)
                 .compact();
     }
@@ -51,8 +51,12 @@ public class JWTUtil {
     private Claims getClaims(String token) {
         SecretKey key = getKeyBySecret();
         try {
-            return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
-        } catch (Exception e) {
+            return Jwts.parser()
+                    .verifyWith(key)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+            } catch (Exception e) {
             return null;
         }
     }
