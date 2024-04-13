@@ -19,6 +19,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.mevy.restfulapi.security.JWTAuthenticationFilter;
+import com.mevy.restfulapi.security.JWTAuthorizationFilter;
 import com.mevy.restfulapi.security.JWTUtil;
 
 @Configuration
@@ -59,6 +60,7 @@ public class SecurityConfig {
                 )
                 .authenticationManager(authenticationManager)
                 .addFilter(new JWTAuthenticationFilter(authenticationManager, jwtUtil))
+                .addFilter(new JWTAuthorizationFilter(authenticationManager, jwtUtil, userDetailsService))
                 .build();
         
     }

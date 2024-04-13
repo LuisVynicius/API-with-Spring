@@ -136,7 +136,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler imple
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException exception) throws IOException, ServletException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'onAuthenticationFailure'");
+        Integer status = HttpStatus.UNAUTHORIZED.value();
+        response.setStatus(status);
+        response.setContentType("application/json");
+        ErrorResponse errorResponse = new ErrorResponse(status, "Username or password are invalid");
+        response.getWriter().append(errorResponse.toJson());
     }
+
+    
 }
