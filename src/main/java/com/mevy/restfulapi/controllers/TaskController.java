@@ -18,7 +18,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.mevy.restfulapi.models.Task;
 import com.mevy.restfulapi.services.TaskService;
-import com.mevy.restfulapi.services.UserService;
 
 import jakarta.validation.Valid;
 
@@ -29,9 +28,6 @@ public class TaskController {
     
     @Autowired
     private TaskService taskService;
-
-    @Autowired
-    private UserService userService;
 
     @GetMapping("/{id}")
     public ResponseEntity<Task> findById(@PathVariable Long id){
@@ -61,10 +57,9 @@ public class TaskController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Task>> findAllByUserId(@PathVariable Long userId){
-        userService.findById(userId);
-        List<Task> objs = taskService.findAllByUserId(userId);
+    @GetMapping("/user")
+    public ResponseEntity<List<Task>> findAllByUser(){
+        List<Task> objs = taskService.findAllByUser();
         return ResponseEntity.ok().body(objs);
     }
 }
