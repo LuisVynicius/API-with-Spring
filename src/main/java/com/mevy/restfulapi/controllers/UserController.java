@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.mevy.restfulapi.models.User;
-import com.mevy.restfulapi.models.User.CreateUser;
-import com.mevy.restfulapi.models.User.UpdateUser;
+import com.mevy.restfulapi.models.dto.UserCreateDTO;
+import com.mevy.restfulapi.models.dto.UserUpdateDTO;
 import com.mevy.restfulapi.services.UserService;
 
 import jakarta.validation.Valid;
@@ -37,18 +37,19 @@ public class UserController{
     }
 
     @PostMapping
-    @Validated(CreateUser.class)
-    public ResponseEntity<Void> create(@RequestBody @Valid User obj){
-        obj = userService.create(obj);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+    public ResponseEntity<Void> create(@RequestBody @Valid UserCreateDTO obj){
+        User user = userService.fromDTO(obj);
+        User newUser = userService.create(user);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                        .path("/{id}").buildAndExpand(newUser.getId()).toUri();
         return ResponseEntity.created(uri).build();
     }
 
     @PutMapping("/{id}")
-    @Validated(UpdateUser.class)
-    public ResponseEntity<Void> update(@RequestBody @Valid User obj, @PathVariable Long id){
+    public ResponseEntity<Void> update(@RequestBody @Valid UserUpdateDTO obj, @PathVariable Long id){
         obj.setId(id);
-        obj = userService.update(obj);
+        User user = userService.fromDTO(obj);
+        userService.update(user);
         return ResponseEntity.noContent().build();
     }
 

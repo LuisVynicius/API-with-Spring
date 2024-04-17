@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.mevy.restfulapi.models.Task;
 import com.mevy.restfulapi.models.User;
 import com.mevy.restfulapi.models.enums.ProfileEnum;
+import com.mevy.restfulapi.models.projection.TaskProjection;
 import com.mevy.restfulapi.repositories.TaskRepository;
 import com.mevy.restfulapi.security.UserSpringSecurity;
 import com.mevy.restfulapi.services.exceptions.AuthorizationException;
@@ -38,12 +39,12 @@ public class TaskService {
         return task;
     }
 
-    public List<Task> findAllByUser(){
+    public List<TaskProjection> findAllByUser(){
         UserSpringSecurity userSpringSecurity = UserService.authenticated();
         if (Objects.isNull(userSpringSecurity)){
             throw new AuthorizationException("Access Denied! ");
         }
-        List<Task> tasks = taskRepository.findByUser_Id(userSpringSecurity.getId());
+        List<TaskProjection> tasks = taskRepository.findByUser_Id(userSpringSecurity.getId());
         return tasks;
     }
 

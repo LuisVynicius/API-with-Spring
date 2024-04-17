@@ -13,25 +13,21 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name = "tb_task")
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode(of = "id")
+@Data
 public class Task implements Serializable{
     
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(nullable = false, unique = true)
     private Long id;
-
+    
     @Column(length = 255, nullable = false)
     @NotBlank
     @Size(min = 1, max = 255)

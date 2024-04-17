@@ -5,9 +5,10 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.mevy.restfulapi.models.Task;
+import com.mevy.restfulapi.models.projection.TaskProjection;
 
-public interface TaskRepository extends JpaRepository<Task, Long>{
-    
-    List<Task> findByUser_Id(Long id);
+public interface TaskRepository extends JpaRepository<Task, Long> {
+
+    List<TaskProjection> findByUser_Id(Long id);
 
 }

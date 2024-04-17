@@ -21,23 +21,16 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name = "tb_user")
 @NoArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode(of = "id")
+@Data
 public class User implements Serializable{
-
-    public interface CreateUser{}
-    public interface UpdateUser{}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,14 +38,14 @@ public class User implements Serializable{
     private Long id;
 
     @Column(length = 100, nullable = false, unique = true)
-    @NotEmpty(groups = CreateUser.class)
-    @Size(groups = CreateUser.class, min = 2, max = 100)
+    @NotBlank(message = "This field must have at least one character. ")
+    @Size(min = 2, max = 100)
     private String username;
 
     
     @Column(length = 60, nullable = false)
-    @NotEmpty(groups = {CreateUser.class, UpdateUser.class})
-    @Size(groups = {CreateUser.class, UpdateUser.class}, min = 8, max = 60)
+    @NotBlank(message = "This field must have at least one character. ")
+    @Size(min = 8, max = 60)
     private String password;
 
     @JsonProperty(access = Access.WRITE_ONLY)
